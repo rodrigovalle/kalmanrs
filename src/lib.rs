@@ -29,6 +29,15 @@ impl KalmanFilter {
             cov_mat: Array2::ones((n, n)),
         }
     }
+
+    // update covariances according to the prediction matrix
+    // follows from the identity:
+    //     Cov(x) = sigma
+    //     Cov(Ax) = A * sigma * A^T
+    fn update_cov_mat(&mut self) {
+        let tmp = self.cov_mat.dot(&self.pred_mat.t());
+        self.cov_mat = self.pred_mat.dot(&tmp);
+    }
 }
 
 #[cfg(test)]
